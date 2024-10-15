@@ -407,46 +407,43 @@ void EntityBlock::paint(QPainter &painter)
     QVector<Port> inputPorts, outputPorts, clockPorts, resetPorts;
 
     //Divide the ports in 4 groups. input, clock and reset are on the left, but grouped together. Output ports on the right.
-    for(int i=0; i<ports.size(); i++)
+    for(Port port : ports)
     {
-        if(!ports[i].comment.startsWith("R ")&&
-           !ports[i].comment.startsWith("L ")&&
-                ((ports[i].name.contains("clk", Qt::CaseInsensitive)||
-           ports[i].name.contains("clock", Qt::CaseInsensitive))&&
-                ports[i].direction==in))
-           clockPorts.push_back(ports[i]);
-        else if (!ports[i].comment.startsWith("R ")&&
-                 !ports[i].comment.startsWith("L ")&&
-                 ((ports[i].name.contains("rst", Qt::CaseInsensitive)||
-                 ports[i].name.contains("reset", Qt::CaseInsensitive))
-                 &&ports[i].direction==in))
-            resetPorts.push_back(ports[i]);
-        else if(!ports[i].comment.startsWith("R ")&&(
-                ports[i].name.startsWith("s_axi")||
-           ports[i].name.contains("slave_")||
-           ports[i].comment.startsWith("L ")))
+        if(port.comment.startsWith("R ") || (port.comment.compare("R") == 0))
         {
-            inputPorts.push_back(ports[i]);
-            if(ports[i].comment.startsWith("L "))
-                inputPorts.back().comment = inputPorts.back().comment.mid(2,-1);
+            port.comment = port.comment.mid(2,-1);
+            outputPorts.push_back(port);
         }
-        else if(ports[i].name.startsWith("m_axi")||
-            ports[i].name.contains("master_")||
-            ports[i].comment.startsWith("R "))
+        else if(port.comment.startsWith("L ") || (port.comment.compare("L") == 0))
         {
-            outputPorts.push_back(ports[i]);
-            if(ports[i].comment.startsWith("R "))
-                outputPorts.back().comment = outputPorts.back().comment.mid(2,-1);
+            port.comment = port.comment.mid(2,-1);
+            inputPorts.push_back(port);
         }
-        else if(ports[i].direction==in) //in and linkage go left, but clock and reset on the bottom left.
+        else if(port.name.startsWith("s_axi", Qt::CaseInsensitive) || port.name.contains("slave_", Qt::CaseInsensitive))
         {
-			inputPorts.push_back(ports[i]);
-	    }
-        else if (ports[i].direction==linkage) {
-            inputPorts.push_back(ports[i]);
+            inputPorts.push_back(port);
+        }
+        else if(port.name.startsWith("m_axi", Qt::CaseInsensitive) || port.name.contains("master_", Qt::CaseInsensitive))
+        {
+            outputPorts.push_back(port);
+        }
+        else if(port.direction==in && (port.name.contains("clk", Qt::CaseInsensitive) || port.name.contains("clock", Qt::CaseInsensitive)))
+        {
+            clockPorts.push_back(port);
+        }
+        else if(port.direction==in && (port.name.contains("rst", Qt::CaseInsensitive) || port.name.contains("reset", Qt::CaseInsensitive)))
+        {
+            resetPorts.push_back(port);
+        }
+        else if(port.direction==in) //in and linkage go left, but clock and reset on the bottom left.
+        {
+            inputPorts.push_back(port);
+        }
+        else if (port.direction==linkage) {
+            inputPorts.push_back(port);
         }
         else //inout, out and buffer go on the right.
-            outputPorts.push_back(ports[i]);
+            outputPorts.push_back(port);
 
     }
 

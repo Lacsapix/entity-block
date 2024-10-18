@@ -36,14 +36,14 @@ EntityBlock::EntityBlock(QString fileName, QString targetName, QSettings* s, boo
     cComment = settings->value("Colors/comment",QColor(Qt::darkGreen)).value<QColor>();
     cPortName = settings->value("Colors/portName",QColor(Qt::black)).value<QColor>();
     cPortType = settings->value("Colors/portType",QColor(Qt::darkBlue)).value<QColor>();
-    cBackground = settings->value("Colors/background",QColor("#fffff3")).value<QColor>();
-    cHeader1 = settings->value("Colors/headerLeft",QColor("#014040")).value<QColor>();
-    cHeader2 = settings->value("Colors/headerRight",QColor("#7f7f7f")).value<QColor>();
-    cTitle = settings->value("Colors/title",QColor(Qt::white)).value<QColor>();
-    cBorder = settings->value("Colors/border",QColor("#235676")).value<QColor>();
-    cPorts = settings->value("Colors/port",QColor("#235676")).value<QColor>();
+    cBackground = settings->value("Colors/background",QColor("#ffffff")).value<QColor>();
+    cHeader1 = settings->value("Colors/headerLeft",QColor(Qt::white)).value<QColor>();
+    cHeader2 = settings->value("Colors/headerRight",QColor(Qt::white)).value<QColor>();
+    cTitle = settings->value("Colors/title",QColor(Qt::black)).value<QColor>();
+    cBorder = settings->value("Colors/border",QColor("#A52929")).value<QColor>();
+    cPorts = settings->value("Colors/port",QColor("#ff00ff")).value<QColor>();
     cShadow = settings->value("Colors/shadow",QColor(Qt::darkGray)).value<QColor>();
-    cornerRadius = settings->value("Dimensions/cornerRadius",int(10)).value<int>();
+    cornerRadius = settings->value("Dimensions/cornerRadius",int(0)).value<int>();
     borderWidth = settings->value("Dimensions/borderWidth",int(2)).value<int>();
     spacing = 10;
     success = false;
@@ -697,7 +697,7 @@ void EntityBlock::paint(QPainter &painter)
     p3.addRoundedRect(leftOuter+(1*spacing)+5,3,rectWidth, imageHeight,(1*cornerRadius),(1*cornerRadius));
 
     QBrush shadowBrush(cShadow);
-    painter.fillPath(p3,shadowBrush);
+    //painter.fillPath(p3,shadowBrush);
     painter.fillPath(p2,rectBrush);
     painter.drawPath(p2);
     painter.fillPath(p1,lg);

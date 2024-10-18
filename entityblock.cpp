@@ -717,28 +717,36 @@ void EntityBlock::paint(QPainter &painter)
     painter.setFont(titleFont);
     painter.drawText(leftOuter+spacing,0,rectWidth,titleRect.height(), Qt::AlignHCenter, entityName);
 
+    QString nameString;
+    QString typeString;
+    QString defString;
+
     //Draw input port names, type, comment and symbol
     for(int i=0; i<inputPorts.size(); i++)
     {
+        nameString = inputPorts[i].name.toLower();
+        typeString = inputPorts[i].type.toLower();
+        defString  = inputPorts[i].def.toLower();
+
         if(!createSimplifiedSymbol)
         {
-            painter.setPen(namePen);
-            painter.setFont(nameFont);
-            painter.drawText(0,y+(portH-nameH)/2,leftOuter,portH,Qt::AlignRight, inputPorts[i].name);
             painter.setPen(commentPen);
             painter.setFont(commentFont);
             painter.drawText(leftOuter+(2*spacing),y+nameH,leftInner,portH,Qt::AlignLeft, inputPorts[i].comment);
             painter.setPen(typePen);
             painter.setFont(nameFont);
-            QString typeString = inputPorts[i].type;
-            if(inputPorts[i].def!="")typeString += " ("+inputPorts[i].def+")";
-            painter.drawText(leftOuter+(2*spacing), y, leftInner, portH, Qt::AlignLeft, typeString);
+            if(typeString.contains("vector"))
+            {
+                typeString.replace("std_logic_vector(","[").replace(" downto ",":").replace(")","]");
+                nameString += typeString;
+            }
+            painter.drawText(leftOuter+(2*spacing), y, leftInner, portH, Qt::AlignLeft, nameString);
         }
         else
         {
             painter.setPen(namePen);
             painter.setFont(nameFont);
-            painter.drawText(leftOuter+(2*spacing), y, leftInner, portH, Qt::AlignLeft, inputPorts[i].name);
+            painter.drawText(leftOuter+(2*spacing), y, leftInner, portH, Qt::AlignLeft, nameString);
         }
         paintPortSymbol(painter,inputPorts[i].direction, leftOuter+(1*spacing), y+portH/2,false);
         y += portH;
@@ -752,19 +760,23 @@ void EntityBlock::paint(QPainter &painter)
     //Draw reset port names, type, comment and symbol
     for(int i=0; i<resetPorts.size(); i++)
     {
+        nameString = resetPorts[i].name.toLower();
+        typeString = resetPorts[i].type.toLower();
+        defString  = resetPorts[i].def.toLower();
+
         if(!createSimplifiedSymbol)
         {
-            painter.setPen(namePen);
-            painter.setFont(nameFont);
-            painter.drawText(0,y+(portH-nameH)/2,leftOuter,portH,Qt::AlignRight, resetPorts[i].name);
             painter.setPen(commentPen);
             painter.setFont(commentFont);
             painter.drawText(leftOuter+(2*spacing),y+nameH,leftInner,portH,Qt::AlignLeft, resetPorts[i].comment);
             painter.setPen(typePen);
             painter.setFont(nameFont);
-            QString typeString = resetPorts[i].type;
-            if(resetPorts[i].def!="")typeString += " ("+resetPorts[i].def+")";
-            painter.drawText(leftOuter+(2*spacing), y, leftInner, portH, Qt::AlignLeft, typeString);
+            if(typeString.contains("vector"))
+            {
+                typeString.replace("std_logic_vector(","[").replace(" downto ",":").replace(")","]");
+                nameString += typeString;
+            }
+            painter.drawText(leftOuter+(2*spacing), y, leftInner, portH, Qt::AlignLeft, nameString);
         }
         else
         {
@@ -783,19 +795,23 @@ void EntityBlock::paint(QPainter &painter)
     //Draw clock port names, type, comment and symbol
     for(int i=0; i<clockPorts.size(); i++)
     {
+        nameString = clockPorts[i].name.toLower();
+        typeString = clockPorts[i].type.toLower();
+        defString  = clockPorts[i].def.toLower();
+
         if(!createSimplifiedSymbol)
         {
-            painter.setPen(namePen);
-            painter.setFont(nameFont);
-            painter.drawText(0,y+(portH-nameH)/2,leftOuter,portH,Qt::AlignRight, clockPorts[i].name);
             painter.setPen(commentPen);
             painter.setFont(commentFont);
             painter.drawText(leftOuter+(2*spacing),y+nameH,leftInner,portH,Qt::AlignLeft, clockPorts[i].comment);
             painter.setPen(typePen);
             painter.setFont(nameFont);
-            QString typeString = clockPorts[i].type;
-            if(clockPorts[i].def!="")typeString += " ("+clockPorts[i].def+")";
-            painter.drawText(leftOuter+(2*spacing), y, leftInner, portH, Qt::AlignLeft, typeString);
+            if(typeString.contains("vector"))
+            {
+                typeString.replace("std_logic_vector(","[").replace(" downto ",":").replace(")","]");
+                nameString += typeString;
+            }
+            painter.drawText(leftOuter+(2*spacing), y, leftInner, portH, Qt::AlignLeft, nameString);
 
         }
         else
@@ -815,26 +831,30 @@ void EntityBlock::paint(QPainter &painter)
     //Draw output port names, type, comment and symbol
     for(int i=0; i<outputPorts.size(); i++)
     {
+        nameString = outputPorts[i].name.toLower();
+        typeString = outputPorts[i].type.toLower();
+        defString  = outputPorts[i].def.toLower();
+
         if(!createSimplifiedSymbol)
         {
-            painter.setPen(namePen);
-            painter.setFont(nameFont);
-            painter.drawText(imageWidth-rightOuter,y+(portH-nameH)/2,rightOuter,portH,Qt::AlignLeft, outputPorts[i].name);
             painter.setPen(commentPen);
             painter.setFont(commentFont);
             painter.drawText(imageWidth - rightOuter - rightInner -(2*spacing),y+nameH,rightInner,portH,Qt::AlignRight, outputPorts[i].comment);
             painter.setPen(typePen);
             painter.setFont(nameFont);
-            QString typeString = outputPorts[i].type;
-            if(outputPorts[i].def!="")typeString += " ("+outputPorts[i].def+")";
-            painter.drawText(imageWidth - rightOuter - rightInner -(2*spacing), y, rightInner, portH, Qt::AlignRight, typeString);
+            if(typeString.contains("vector"))
+            {
+                typeString.replace("std_logic_vector(","[").replace(" downto ",":").replace(")","]");
+                nameString += typeString;
+            }
+            painter.drawText(imageWidth - rightOuter - rightInner -(2*spacing), y, rightInner, portH, Qt::AlignRight, nameString);
 
         }
         else
         {
             painter.setPen(namePen);
             painter.setFont(nameFont);
-            painter.drawText(imageWidth - rightOuter - rightInner -(2*spacing), y, rightInner, portH, Qt::AlignRight, outputPorts[i].name);
+            painter.drawText(imageWidth - rightOuter - rightInner -(2*spacing), y, rightInner, portH, Qt::AlignRight, nameString);
         }
         paintPortSymbol(painter,outputPorts[i].direction, imageWidth-rightOuter-(1*spacing), y+portH/2,true);
         y += portH;
